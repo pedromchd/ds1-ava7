@@ -1,13 +1,13 @@
 const express = require('express');
+const router = require('./routers/urls');
+const sequelize = require('./config/database');
 
-const PORT = process.env.PORT || 3001;
+sequelize.sync();
 
 const app = express();
 
-app.get('/api', (req, res) => {
-    res.json({ message: 'Hello from server!' });
-});
+app.use(router);
 
-app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
+app.listen(3001, () => {
+    console.log('Server running in port 3001');
 });
