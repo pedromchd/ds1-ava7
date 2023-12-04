@@ -14,6 +14,10 @@ const Weather = sequelize.define(
             type: DataTypes.STRING(50),
             allowNull: false,
         },
+        data: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
         temperatura: {
             type: DataTypes.DECIMAL(3, 1),
             allowNull: false,

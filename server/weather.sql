@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `weather` (
   `id` int(11) NOT NULL,
   `cidade` varchar(50) NOT NULL,
+  `data` datetime NOT NULL,
   `temperatura` decimal(3,1) NOT NULL,
   `sensacao` decimal(3,1) NOT NULL,
   `umidade` decimal(3,1) NOT NULL,
