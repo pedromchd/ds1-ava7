@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Chart from "chart.js/auto";
+import { Line } from "react-chartjs-2";
 
 function SearchBox({ setQueryReq }) {
     return <input type="search" id="search" placeholder="Search by city name..." onChange={(e) => setQueryReq(e.target.value)} onBlur={(e) => (e.target.value = '')} className="p-2 w-full bg-gray-200 rounded-lg shadow-lg" />;
@@ -37,30 +39,37 @@ function CurrentWeather({ location, forecast, icons }) {
     );
 }
 
+
 function HourlyWeather({ forecast, icons }) {
     const date = new Date();
     let hours = date.getHours();
 
+    const label = [];
     const hourly = [];
 
     while (hours < 24) {
-        const temp = forecast.hourly.temperature_2m[hours];
-        const code = forecast.hourly.weathercode[hours];
-        const time = hours > 5 && hours < 18 ? 'day' : 'night';
-        hourly.push(
-            <div className="flex flex-col items-center">
-                <p className="font-bold text-sm text-gray-400">{hours}:00</p>
-                <div className="w-20 h-20">
-                    <img src={icons[code][time].image} />
-                </div>
-                <p className="text-lg font-bold">{temp}°C</p>
-                <p className="text-sm text-gray-500">☂️ {forecast.hourly.precipitation_probability[hours]}%</p>
-            </div>
-        );
+        label.push(`${hours}:00`);
+        hourly.push(forecast.hourly.temperature_2m[hours]);
         hours++;
     }
+    
+    const data = {
+        labels: label,
+        datasets: [
+            {
+                label: "Temperatura durante o dia",
+                backgroundColor: "rgb(255, 99, 132)",
+                borderColor: "rgb(255, 99, 132)",
+                data: hourly,
+            },
+        ],
+    };
 
-    return <div className="shadow-lg p-4 rounded-xl bg-white flex items-center gap-3 overflow-x-auto">{hourly}</div>;
+    return (
+        <div>
+            <Line data={data} />
+        </div>
+    );
 }
 
 function WeatherOverview({ forecast }) {
@@ -175,10 +184,10 @@ function App() {
                         <SearchBox setQueryReq={setQueryReq} />
                         {queryRes ? <SearchSel queryRes={queryRes} setLocation={setLocation} /> : null}
                     </div>
-                    <div className="flex-grow grid grid-rows-3 gap-4">
+                    <div className="flex-grow grid grid-rows-2 gap-4">
                         {isOnLoad ? location.name ? <p>Loading</p> : <p>Please select a city</p> : <CurrentWeather location={location} forecast={forecast} icons={wmoIcons} />}
                         {isOnLoad ? location.name ? <p>Loading</p> : <p>Please select a city</p> : <HourlyWeather forecast={forecast} icons={wmoIcons} />}
-                        {isOnLoad ? location.name ? <p>Loading</p> : <p>Please select a city</p> : <WeatherOverview forecast={forecast} />}
+                        {/* {isOnLoad ? location.name ? <p>Loading</p> : <p>Please select a city</p> : <WeatherOverview forecast={forecast} />} */}
                     </div>
                 </section>
                 {isOnLoad ? location.name ? <p>Loading</p> : <p>Please select a city</p> : <DailyWeather forecast={forecast} icons={wmoIcons} />}
