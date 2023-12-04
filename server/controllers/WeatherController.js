@@ -11,5 +11,15 @@ async function fetchForecast({ lat, long }) {
 exports.fetchForecast = async (req, res) => {
     const forecast = await fetchForecast(req.params);
 
+    const { 
+        time: data, 
+        temperature_2m: temperatura, 
+        apparent_temperature: sensacao, 
+        relative_humidity_2m: umidade, 
+        weather_code: codigo,
+    } = forecast.current;
+
+    Weather.create({ cidade: 'Cidade', data, temperatura, sensacao, umidade, codigo });
+
     res.json(forecast);
 };
