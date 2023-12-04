@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = require('./routers/urls');
 const sequelize = require('./config/database');
 
